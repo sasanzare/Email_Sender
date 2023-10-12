@@ -1,5 +1,5 @@
-dsfsdfsdfe@gmail.com
-sdfsdf
-sasanzare@gmail.com
-dgsfgdfg
-sdfsdffds@gmail.com
+sender_email@example.com
+sender_password
+recipient1@example.com
+recipient2@example.com
+recipient3@example.com

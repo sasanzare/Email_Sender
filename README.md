@@ -23,7 +23,17 @@ This script is designed to send emails to multiple recipients using the Gmail SM
 
 2.Prepare the recipient list:
 
-.Create a text file named emails.txt and enter the email addresses of the recipients, one per line. The first line should be the sender's email address, and the second line should be the sender's email password.
+.Create a text file named emails.txt and enter the email addresses of the recipients, one per line. The structure of the emails.txt file should be as follows:
+
+.The first line should be the sender's email address.
+.The second line should be the sender's email password.
+.The remaining lines should contain the email addresses of the recipients.
+
+    sender_email@example.com
+    sender_password
+    recipient1@example.com
+    recipient2@example.com
+    recipient3@example.com
 .It is recommended to use a separate Gmail account for sending emails and enable "less secure apps" access for that account.
 
 3.Run the script:
