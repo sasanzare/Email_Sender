@@ -2,9 +2,9 @@
 This script is designed to send emails to multiple recipients using the Gmail SMTP server. It reads the subject, content, and recipient email addresses from separate text files and sends personalized emails to each recipient.
 
 ## Prerequisites
-    .Python 3.x
-    .Tkinter library (usually included with Python installations)
-    .Gmail account with less secure apps access enabled (for sending emails)
+.Python 3.x
+.Tkinter library (usually included with Python installations)
+.Gmail account with less secure apps access enabled (for sending emails)
 
 ## Installation
 
@@ -39,7 +39,7 @@ Execute the script by running the following command in the terminal:
 .If any emails fail to send, an error message box will display the list of recipients whose emails failed to send.
 
 ## License
-    This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Acknowledgments
 .The script utilizes the following libraries:
