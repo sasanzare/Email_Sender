@@ -31,6 +31,7 @@ def send_emails():
     # Connect to the SMTP server
     server = smtplib.SMTP(smtp, port)
     server.starttls()
+    server.connect(smtp, port)  # Establish the connection
     server.login(sender_email, sender_password)
 
     # Total number of recipients
