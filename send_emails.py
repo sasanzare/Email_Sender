@@ -4,6 +4,7 @@ from email.mime.text import MIMEText
 import tkinter
 from tkinter import messagebox
 from tkinter import ttk
+import time
 
 # Function to send emails
 def send_emails():
@@ -69,6 +70,11 @@ def send_emails():
             progress_label.config(text="Sending Emails: {0}/{1}".format(index, total_recipients))
             progress_bar['value'] = index
             progress.update()
+
+            # Wait for 1 minute after sending every 50 emails
+            if index % 50 == 0:
+                time.sleep(60)
+
         except Exception as e:
             # Handle exceptions and store invalid email addresses
             print(f"Failed to send email to {recipient_email}. Error: {str(e)}")
