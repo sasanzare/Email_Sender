@@ -28,74 +28,96 @@ def send_emails():
     smtp = 'smtp.gmail.com'
     port = 587
 
-    # Connect to the SMTP server
-    server = smtplib.SMTP(smtp, port)
-    server.starttls()
-    server.login(sender_email, sender_password)
+    email_sent = False
 
-    # Total number of recipients
-    total_recipients = len(recipients)
-
-    # Create a progress window using tkinter
-    progress = tkinter.Tk()
-    progress.title("Email Progress")
-    progress.geometry("400x100")
-
-    # Label to display the progress
-    progress_label = tkinter.Label(progress, text="Sending Emails: 0/{0}".format(total_recipients))
-    progress_label.pack()
-
-    # Progress bar to visualize the progress
-    progress_bar = ttk.Progressbar(progress, length=300, mode="determinate", maximum=total_recipients)
-    progress_bar.pack()
-
-    # List to store invalid email addresses
-    invalid_emails = []
-
-    # Loop through each recipient and send the email
-    for index, recipient_email in enumerate(recipients, 1):
+    while not email_sent:
         try:
-            # Create the email message
-            message = MIMEMultipart()
-            message['From'] = sender_email
-            message['To'] = recipient_email
-            message['Subject'] = text_subject
-            message.attach(MIMEText(text_content, 'html'))
+            # Connect to the SMTP server
+            server = smtplib.SMTP(smtp, port)
+            server.starttls()
+            server.login(sender_email, sender_password)
 
-            # Convert the message to string and send the email
-            text = message.as_string()
-            server.sendmail(sender_email, recipient_email, text)
+            # Total number of recipients
+            total_recipients = len(recipients)
 
-            # Update the progress label and bar
-            progress_label.config(text="Sending Emails: {0}/{1}".format(index, total_recipients))
-            progress_bar['value'] = index
-            progress.update()
+            # Create a progress window using tkinter
+            progress = tkinter.Tk()
+            progress.title("Email Progress")
+            progress.geometry("400x100")
 
-            # Wait for 1 minute after sending every 50 emails
-            if index % 50 == 0:
-                time.sleep(60)
+            # Label to display the progress
+            progress_label = tkinter.Label(progress, text="Sending Emails: 0/{0}".format(total_recipients))
+            progress_label.pack()
+
+            # Progress bar to visualize the progress
+            progress_bar = ttk.Progressbar(progress, length=300, mode="determinate", maximum=total_recipients)
+            progress_bar.pack()
+
+            # List to store invalid email addresses
+            invalid_emails = []
+
+            # Loop through each recipient and send the email
+            for index, recipient_email in enumerate(recipients, 1):
+                try:
+                    # Create the email message
+                    message = MIMEMultipart()
+                    message['From'] = sender_email
+                    message['To'] = recipient_email
+                    message['Subject'] = text_subject
+                    message.attach(MIMEText(text_content, 'html'))
+
+                    # Convert the message to string and send the email
+                    text = message.as_string()
+                    server.sendmail(sender_email, recipient_email, text)
+
+                    # Update the progress label and bar
+                    progress_label.config(text="Sending Emails: {0}/{1}".format(index, total_recipients))
+                    progress_bar['value'] = index
+                    progress.update()
+
+                    # Wait for 1 minute after sending every 50 emails
+                    if index % 50 == 0:
+                        time.sleep(60)
+
+                except Exception as e:
+                    # Handle exceptions and store invalid email addresses
+                    print(f"Failed to send email to {recipient_email}. Error: {str(e)}")
+                    invalid_emails.append(recipient_email)
+
+            # Close the progress window
+            progress.destroy()
+
+            # Calculate the success count
+            success_count = total_recipients - len(invalid_emails)
+
+            # Show appropriate message boxes based on the result
+            if invalid_emails:
+                error_message = "Failed to send emails to the following recipients:\n\n"
+                error_message += "\n".join(invalid_emails)
+                messagebox.showerror("Email Sending Error", error_message)
+            else:
+                messagebox.showinfo("Email Sent", "All emails sent successfully.")
+
+            messagebox.showinfo("Email Summary", f"Total Emails: {total_recipients}\nSuccessfully Sent: {success_count}")
+
+            # Close the SMTP server connection
+            server.quit()
+
+            email_sent = True
+
+        except smtplib.SMTPException as e:
+            # Handle SMTP exceptions
+            print(f"SMTPException occurred: {str(e)}")
+            server.quit()
 
         except Exception as e:
-            # Handle exceptions and store invalid email addresses
-            print(f"Failed to send email to {recipient_email}. Error: {str(e)}")
-            invalid_emails.append(recipient_email)
+            # Handle other exceptions
+            print(f"An error occurred: {str(e)}")
+            server.quit()
 
-    # Close the SMTP server connection and destroy the progress window
-    server.quit()
-    progress.destroy()
+        # Wait for some time before reattempting to send emails
+        time.sleep(5)
 
-    # Calculate the success count
-    success_count = total_recipients - len(invalid_emails)
-
-    # Show appropriate message boxes based on the result
-    if invalid_emails:
-        error_message = "Failed to send emails to the following recipients:\n\n"
-        error_message += "\n".join(invalid_emails)
-        messagebox.showerror("Email Sending Error", error_message)
-    else:
-        messagebox.showinfo("Email Sent", "All emails sent successfully.")
-
-    messagebox.showinfo("Email Summary", f"Total Emails: {total_recipients}\nSuccessfully Sent: {success_count}")
 
 # Call the send_emails function
 send_emails()
