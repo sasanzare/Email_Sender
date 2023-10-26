@@ -5,9 +5,30 @@ import tkinter
 from tkinter import messagebox
 from tkinter import ttk
 import time
+import socket
+
+# Function to show and close the message connection
+def show_message_connection():
+    messagebox.showinfo("Internet Connection", "Waiting for internet connection...")
+    root.after(3000, root.destroy)
+
+# Function to check internet connectivity
+def check_internet():
+    try:
+        # Check if a connection to a well-known host can be established
+        socket.create_connection(("www.google.com", 80))
+        return True
+    except OSError:
+        pass
+    return False
 
 # Function to send emails
 def send_emails():
+    # Wait for internet connectivity
+    while not check_internet():
+        # Display a message or progress indicator indicating waiting for internet connection
+        show_message_connection()
+        time.sleep(5)
     # Read the subject from the subject.txt file
     with open("subject.txt", "r") as subject_file:
         text_subject = subject_file.readline().strip()
